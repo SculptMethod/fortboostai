@@ -1,0 +1,9 @@
+import crypto from 'node:crypto';
+export function json(status,data){return {statusCode:status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'},body:JSON.stringify(data)}}
+export function env(name){return (process.env[name]||'').trim()}
+export function configured(){return Boolean(env('SUPABASE_URL')&&env('SUPABASE_ANON_KEY')&&env('SUPABASE_SERVICE_ROLE_KEY'))}
+export async function userFrom(event){const token=(event.headers.authorization||event.headers.Authorization||'').replace(/^Bearer /i,'');if(!token||!env('SUPABASE_URL')||!env('SUPABASE_ANON_KEY'))return null;const r=await fetch(env('SUPABASE_URL')+'/auth/v1/user',{headers:{apikey:env('SUPABASE_ANON_KEY'),Authorization:'Bearer '+token}});if(!r.ok)return null;const u=await r.json();return u.id?u:null}
+export async function database(table,{method='GET',query='',body,prefer='return=representation'}={}){if(!configured())throw Error('Database unavailable');const r=await fetch(env('SUPABASE_URL')+'/rest/v1/'+table+query,{method,headers:{apikey:env('SUPABASE_SERVICE_ROLE_KEY'),Authorization:'Bearer '+env('SUPABASE_SERVICE_ROLE_KEY'),'Content-Type':'application/json',Prefer:prefer},body:body?JSON.stringify(body):undefined});const content=await r.text();if(!r.ok)throw Error('Database operation failed: '+r.status);return content?JSON.parse(content):[]}
+export function safeBody(event){try{const b=JSON.parse(event.body||'{}');return b&&typeof b==='object'&&!Array.isArray(b)?b:null}catch{return null}}
+export function licenseFor(sessionId){if(!env('LICENSE_SECRET'))throw Error('License secret not configured');return 'FB-'+crypto.createHmac('sha256',env('LICENSE_SECRET')).update(sessionId).digest('hex').toUpperCase().match(/.{1,8}/g).slice(0,4).join('-')}
+export const sha=s=>crypto.createHash('sha256').update(s).digest('hex');

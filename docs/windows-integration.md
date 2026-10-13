@@ -1,0 +1,2 @@
+# Future Windows application
+Planned client must authenticate through a suitable device-aware flow, transmit only consented diagnostics, query validated licenses over TLS, and store secrets server-side. Current `POST /api/license` is an authenticated proof-of-concept verification API, **not a finished device-activation protocol**. Never include Supabase service-role credentials or Stripe secrets in Windows code. Real measurement methodology, compatible rollback, update signing and anti-cheat safeguards must be developed and tested before distribution.

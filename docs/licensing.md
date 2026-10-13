@@ -1,0 +1,2 @@
+# Licensing
+Test fulfillment derives a 128-bit displayed-format key from HMAC-SHA256 of the Stripe session ID using `LICENSE_SECRET`. Only SHA-256 hashes are stored. The `POST /api/license` endpoint authenticates a Supabase user and verifies the key against licenses owned by that user. **Not yet complete:** retrieving/displaying the key in a secure post-purchase flow, device binding, reset and revoke operations, Windows activation and offline access. No Windows license activation should be offered until those capabilities are complete.
