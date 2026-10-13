@@ -1,0 +1,1 @@
+import {json,env} from './_shared.mjs';export async function handler(){return json(200,{supabaseUrl:env('SUPABASE_URL')||null,supabaseAnonKey:env('SUPABASE_ANON_KEY')||null,checkoutEnabled:env('CHECKOUT_ENABLED')==='true'&&env('STRIPE_SECRET_KEY').startsWith('sk_test_')})}

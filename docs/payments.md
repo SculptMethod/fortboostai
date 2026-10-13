@@ -1,0 +1,2 @@
+# Payments
+Checkout is explicitly gated by `CHECKOUT_ENABLED=true`, a Stripe test secret and a configured Price ID. Client-side success redirects are not proof of payment. Only a timestamp-checked, signed `checkout.session.completed` webhook with `payment_status=paid` creates an order and license. Database uniqueness on session ID and order ID makes webhook retries safe. **Not production-ready:** refund/dispute revocation, international tax handling, order receipts, and full integration tests remain to be implemented and reviewed.
